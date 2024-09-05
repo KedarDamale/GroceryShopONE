@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KRP BAZAAR Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to right, #ed5c66, #ffc673);
+    color: white;
+    text-align: center;
+  }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+  }
+  .header h1 {
+    margin: 0;
+    padding-left: 10px;
+    text-align: left;
+  }
+  .greeting {
+    margin-top: 20px;
+    text-align: left;
+    padding-left: 20px;
+  }
+  .metrics, .charts {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin: 20px;
+  }
+  .metric, .chart {
+    border: 2px solid white;
+    border-radius: 10px;
+    padding: 10px;
+    width: 18%;
+    margin-bottom: 20px;
+  }
+  .menu {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
+  }
+  .menu a {
+    color: white;
+    text-decoration: none;
+    padding: 0 10px;
+    border: 2px solid white;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  .menu a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+  .menu a + a {
+    margin-left: 10px; /* Add margin between the buttons */
+  }
+  .chart-title {
+    color: #ccc; /* Darker color for chart titles */
+  }
+  canvas {
+    max-width: 100%;
+  }
+  .metric {
+    font-size: 18px; /* Increase font size */
+    padding-bottom: 20px; /* Add padding between metrics */
+  }
+  .amount {
+    font-size: 16px; /* Increase font size for amounts */
+  }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>KRP BAZAAR</h1>
+  <div class="menu">
+    <a href="javascript:void(0)" onclick="window.location.href=window.location.href">Dashboard</a>
+    <a href="https://kedar152004.github.io/Miniproject/" target="_blank">About Us</a>
+  </div>
+</div>
+<div class="greeting">
+  <h2>Hello, Admin. How's your day?</h2>
+</div>
+<div class="metrics">
+  <div class="metric">
+    <div>Total Bills Generated</div>
+    <div class="amount">{{ total_bills_generated }}</div>
+  </div>
+  <div class="metric">
+    <div>Total Customers</div>
+    <div class="amount">{{ total_customers }}</div>
+  </div>
+  <div class="metric">
+    <div>Total Inventory size</div>
+    <div class="amount">{{ total_inventory_size }}</div>
+  </div>
+  <div class="metric">
+    <div>Total Employees</div>
+    <div class="amount">{{ total_employees }}</div>
+  </div>
+</div>
+<div class="charts">
+  <div class="chart" id="inventoryChartContainer">
+    <h3 class="chart-title">Inventory Distribution</h3>
+    <canvas id="inventoryPieChart"></canvas>
+  </div>
+  <div class="chart" id="employeeChartContainer">
+    <h3 class="chart-title">Employee Distribution</h3>
+    <canvas id="employeePieChart"></canvas>
+  </div>
+</div>
+<script>
+  const inventoryData = {
+    labels: ['Dairy', 'Stationary', 'Grocery'],
+    datasets: [{
+      data: [0, 0, 0],
+      backgroundColor: ['#f7931a', '#4ac18e', '#e15454'],
+    }]
+  };
+
+  const employeeData = {
+    labels: ['Cashier', 'Custodian', 'Others'],
+    datasets: [{
+      data: [0, 0, 0],
+      backgroundColor: ['#4ac18e', '#e15454', '#f7931a'],
+    }]
+  };
+
+  const inventoryPieChart = new Chart(document.getElementById('inventoryPieChart'), {
+    type: 'pie',
+    data: inventoryData,
+    options: {
+      title: {
+        display: true,
+        text: 'Inventory Distribution',
+        fontColor: '#ccc' // Darker color for chart title
+      }
+    }
+  });
+
+  const employeePieChart = new Chart(document.getElementById('employeePieChart'), {
+    type: 'pie',
+    data: employeeData,
+    options: {
+      title: {
+        display: true,
+        text: 'Employee Distribution',
+        fontColor: '#ccc' // Darker color for chart title
+      }
+    }
+  });
+
+  // Function to fetch inventory data from Flask backend
+  function fetchInventoryData() {
+    fetch('/inventory_data')
+      .then(response => response.json())
+      .then(data => {
+        // Update inventoryData with fetched data
+        inventoryData.datasets[0].data = Object.values(data);
+        // Update the inventoryPieChart
+        inventoryPieChart.update();
+      })
+      .catch(error => console.error('Error fetching inventory data:', error));
+  }
+
+  // Function to fetch employee data from Flask backend
+  function fetchEmployeeData() {
+    fetch('/employee_data')
+      .then(response => response.json())
+      .then(data => {
+        // Update employeeData with fetched data
+        employeeData.datasets[0].data = Object.values(data);
+        // Update the employeePieChart
+        employeePieChart.update();
+      })
+      .catch(error => console.error('Error fetching employee data:', error));
+  }
+
+  // Call fetchInventoryData and fetchEmployeeData initially to populate the charts
+  fetchInventoryData();
+  fetchEmployeeData();
+
+  // Set interval to update charts periodically (e.g., every 5 seconds)
+  setInterval(fetchInventoryData, 5000);
+  setInterval(fetchEmployeeData, 5000);
+</script>
+</body>
+</html>
+
+
