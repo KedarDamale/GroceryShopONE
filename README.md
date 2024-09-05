@@ -48,8 +48,7 @@ Welcome to the <b>GroceryShopONE</b>! This Python-based application features two
 </ul>
 
 <br>
-<br>
-<br>
+
 
 # <span style="color: #FFA500; background-color: #FFF5E1; padding: 10px; border-radius: 5px;">Preview of the Features</span>
 
