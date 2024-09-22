@@ -1,5 +1,4 @@
-#master_username = EMP0000
-#master_password = kedar152004
+
 __author__="Kedar Pravin Damale"
 import os
 from tkinter import *
