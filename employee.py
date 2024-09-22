@@ -612,7 +612,8 @@ class bill_window:
 
                     self.bill_date_message.insert(END, bill_date.get())
                     self.bill_date_message.configure(state="disabled")
-
+#master_username = EMP0000
+#master_password = kedar152004
                     
 
                     with sqlite3.connect("./Database/store.db") as db:
